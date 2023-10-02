@@ -1,5 +1,6 @@
 from pico2d import *
 import random
+
 TUK_WIDTH, TUK_HEIGHT = 1280, 1024
 
 
@@ -28,7 +29,7 @@ def handle_events():
 def reset_world():
     global running, cx, cy, frame
     global hx, hy
-    global sx,sy
+    global sx, sy
     global t
     global action
 
@@ -37,13 +38,20 @@ def reset_world():
     frame = 0
     action = 3
 
-    sx, sy = cx, cy # p1 : 시작점
+    set_new_target_arrow()
+
+
+def set_new_target_arrow():
+    global sx, sy, hx, hy, t
+    sx, sy = cx, cy  # p1 : 시작점
     # hx, hy = TUK_WIDTH - 150, TUK_HEIGHT - 150
-    hx, hy = random.randint(0, TUK_WIDTH), random.randint(0,TUK_HEIGHT) # p2 : 끝점
+    hx, hy = random.randint(0, TUK_WIDTH), random.randint(0, TUK_HEIGHT)  # p2 : 끝점
     t = 0.0
+
+
 def update_world():
     global frame
-    global cx,cy
+    global cx, cy
     global t
     global action
 
@@ -53,8 +61,10 @@ def update_world():
     if t <= 1.0:
         cx = (1 - t) * sx + t * hx  # cx는 시작 x와 끝 x를 1-t : t 의 비율로 섞은 위치
         cy = (1 - t) * sy + t * hy
-        t += 0.001
-
+        t += 0.01
+    else:
+        cx,cy = hx,hy   # 캐릭터 위치를 목적지 위치와 강제로 정확히 일치시킴
+        set_new_target_arrow()
 
 def render_world():
     clear_canvas()
